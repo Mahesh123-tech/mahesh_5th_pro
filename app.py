@@ -5,208 +5,223 @@ import os
 import hashlib
 import plotly.graph_objects as go
 
-# Configure page layouts
+# Configure page layout and properties
 st.set_page_config(
-    page_title="AskReddit Analytics & Strategy Portal", 
+    page_title="AskReddit Assessment & Strategy Engine", 
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom visual layout card treatments
+# Custom premium styling classes
 st.markdown("""
 <style>
-    .reddit-box {
+    .interview-card {
+        background-color: #ffffff;
+        padding: 22px;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+    }
+    .result-box {
         background-color: #f8f9fa;
         padding: 20px;
         border-radius: 12px;
         border-left: 6px solid #FF4500;
         margin-bottom: 20px;
     }
-    .advice-header {
+    .advice-title {
         font-size: 18px;
         font-weight: bold;
         color: #FF4500;
         margin-bottom: 8px;
     }
+    .question-label {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1E293B;
+        margin-bottom: 4px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🍊 AskReddit Content Optimization & Engagement Engine")
-st.write("Analyze thread structural configurations, predict reply distributions, and review platform engagement metrics based on official repository metadata.")
+st.title("🧠 AskReddit Interactive Assessment & Strategy Portal")
+st.write("Answer the strategic content questions below to evaluate your simulated thread performance against the global community baselines.")
 
-# --- 1. SAFELY LOAD JSON DATASET METADATA ---
+# --- 1. LOAD THE DATASET METADATA SAFELY ---
 @st.cache_data
-def load_reddit_metadata():
+def load_metadata():
     filename = "askreddit-questions-and-answers-metadata.json"
     if os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as file:
             return json.load(file)
     else:
-        # Standalone resilient structural schema fallback
+        # Resilient structural schema fallback
         return {
             "name": "AskReddit questions and answers",
             "alternateName": "Q&A on anything and everything",
             "license": {"name": "CC0: Public Domain"}
         }
 
-metadata = load_reddit_metadata()
+metadata = load_metadata()
 
-# --- 2. SIDEBAR CONTENT: REPOSITORY PROPERTIES ---
-st.sidebar.markdown("### 📋 Dataset Structural Sub-tables")
-st.sidebar.write("• **reddit_questions.csv:** 189,565 threads")
-st.sidebar.write("• **reddit_answers.csv:** 5,566,660 top comments")
-st.sidebar.write("• **reddit_answers_long:** Answers > 1,000 characters")
+# --- 2. SIDEBAR SYSTEM SETTINGS ---
+st.sidebar.markdown("### 📊 Dataset Storage Weights")
+st.sidebar.write("• **reddit_questions.csv:** 189,565 entries")
+st.sidebar.write("• **reddit_answers.csv:** 5,566,660 entries")
+st.sidebar.write("• **reddit_answers_long.csv:** Answers > 1,000 Chars")
 st.sidebar.markdown("---")
-st.sidebar.write(f"**License Profile:** {metadata.get('license', {}).get('name', 'CC0')}")
-st.sidebar.write("**Keywords Used:** `NLP`, `Language Modelling`, `Q&A`")
+st.sidebar.write(f"**Archive Name:** {metadata.get('name')}")
+st.sidebar.write(f"**Target Objective:** {metadata.get('alternateName')}")
 
-# --- 3. HIGH LEVEL OVERVIEW HEADERS (From image structural alignment) ---
-st.markdown("### 📌 AskReddit Global Corpus Reference Benchmarks")
-st.caption("Aggregated baseline volumes extracted directly from the system specification sheets:")
-
+# --- 3. GLOBAL STATISTICAL SUMMARY BANNERS ---
+st.markdown("### 📌 Baseline Corpus Overview")
 ov_col1, ov_col2, ov_col3, ov_col4 = st.columns(4)
 with ov_col1:
-    st.metric(label="Total Questions Tracked", value="189,565 Posts", delta="Primary Database")
+    st.metric(label="Total Questions Analyzed", value="189,565 Posts")
 with ov_col2:
-    st.metric(label="Total Comments Tracked", value="5,940,827 Replies", delta="Top-level comments only")
+    st.metric(label="Total Top-Level Answers", value="5,940,827 Replies")
 with ov_col3:
-    st.metric(label="Ratio of Answers per Post", value="31.3 Replies", delta="High Virality Factor")
+    st.metric(label="Average Replies Density Ratio", value="31.3 per Post")
 with ov_col4:
-    st.metric(label="Source Files Split", value="3 CSV + 1 DB", delta="SQLite Included")
+    st.metric(label="Primary Target Audience", value="Global Reddit Community")
 
 st.markdown("---")
 
-# --- 4. INTERACTIVE USER FORM SYSTEM ---
-with st.form("askreddit_strategy_form"):
-    st.subheader("📋 Step 1: Thread Simulation Parameter Form")
-    
-    # Preserved original 3-column top parameter placement
-    col_p1, col_p2, col_p3 = st.columns(3)
-    with col_p1:
-        creator_alias = st.text_input("Enter Content Strategist Alias:", value="RedditAnalyst_01")
-    with col_p2:
-        target_category = st.selectbox(
-            "Primary Subject Area Focus:",
-            ["Thought-Provoking Discussion", "Open-Ended Questioning", "Personal Anecdotes & Stories", "Humor & Casual Conversation"]
-        )
-    with col_p3:
-        projected_upvotes = st.number_input("Target Upvote Baseline Threshold:", min_value=1, max_value=50000, value=2500)
-        
-    st.markdown("---")
-    st.markdown("##### Configure Phrase Intensity Vector Multipliers (0 to 100 max scale):")
-    
-    # Preserved original side-by-side split column metrics layout block
-    col_c1, col_c2 = st.columns(2)
-    user_metrics = {}
-    
-    input_categories = [
-        'Controversy Density', 'Emotional Resonation Weight', 'Title Length Optimization', 
-        'Readability Level Index', 'Peak Traffic Timing Alignment', 'Niche Keyword Specialty'
-    ]
-    
-    for i, cat in enumerate(input_categories):
-        with col_c1 if i % 2 == 0 else col_c2:
-            # Set default balances
-            default_val = 65 if i in [1, 2] else 40
-            user_metrics[cat] = st.number_input(f"{cat} Intensity Score", min_value=0, max_value=100, value=default_val)
-            
-    submit_button = st.form_submit_button(label="🚀 Parse Thread Dynamics & Predict Engagement")
+# --- 4. INTERACTIVE QUESTIONNAIRE INTERFACE (Form-Based) ---
+st.subheader("📋 Context Interview: Answer the System Questions")
+st.markdown("Provide your design choices below to evaluate your thread's potential traction.")
 
-# --- 5. DATA COMPUTATION AFTER FORM SUBMISSION ---
+with st.form("askreddit_interview_form"):
+    
+    # Let's organize the interview questions inside neat design blocks
+    st.markdown('<div class="interview-card">', unsafe_allow_html=True)
+    
+    col_q1, col_q2 = st.columns(2)
+    with col_q1:
+        st.markdown('<div class="question-label">💬 Q1: What is the text of your thought-provoking question?</div>', unsafe_allow_html=True)
+        user_question = st.text_input("", value="What is a small, everyday habit that completely changed your life?", label_visibility="collapsed")
+        
+        st.markdown('<div class="question-label" style="margin-top:20px;">🎭 Q2: What core emotional hook does this target?</div>', unsafe_allow_html=True)
+        user_hook = st.selectbox("", ["Curiosity & Thought Exploration", "Nostalgia & Personal Memories", "Controversial Debate", "Humor & Casual Interaction"], label_visibility="collapsed")
+    
+    with col_q2:
+        st.markdown('<div class="question-label">📏 Q3: What is the expected answer length format from users?</div>', unsafe_allow_html=True)
+        user_length = st.radio("", ["Short & Punchy Phrases (<300 chars)", "Detailed Explanations (300-1000 chars)", "Long-form Personal Stories (>1000 chars - tracks to answers_long.csv)"], index=1, label_visibility="collapsed")
+        
+        st.markdown('<div class="question-label" style="margin-top:15px;">⏱️ Q4: Rate the estimated active community traffic level at post time (1-10):</div>', unsafe_allow_html=True)
+        user_traffic = st.slider("", min_value=1, max_value=10, value=7, label_visibility="collapsed")
+        
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Custom profile name identifier
+    st.markdown("##### 🔑 Submitter Credentials:")
+    col_meta1, col_meta2 = st.columns(2)
+    with col_meta1:
+        analyst_name = st.text_input("Content Strategist Name:", value="User_Alpha")
+    with col_meta2:
+        include_insights = st.checkbox("Generate automated data adjustment insights", value=True)
+        
+    submit_button = st.form_submit_button(label="🎯 Submit My Answers & Analyze Content")
+
+# --- 5. COMPUTE & DISPLAY EVALUATION RESULTS UPON SUBMISSION ---
 if submit_button:
     st.markdown("---")
-    st.markdown(f"## ⚡ Strategic Engagement Blueprint for {creator_alias}")
+    st.markdown(f"## ⚡ Diagnostic Strategy Results for {analyst_name}")
     
-    # Compute deterministic analytical metrics based on input strings for charting realism
-    def get_deterministic_hash_score(text, base_min, base_max):
-        return base_min + (int(hashlib.md5(text.encode('utf-8')).hexdigest(), 16) % (base_max - base_min + 1))
-        
-    calculated_viral_chance = get_deterministic_hash_score(target_category, 45, 96)
-    calculated_replies_density = get_deterministic_hash_score(target_category + "replies", 15, 88)
+    # Generate deterministic evaluation metrics using data text hashing
+    seed_str = f"{user_hook}-{user_length}-{user_traffic}"
+    hash_int = int(hashlib.md5(seed_str.encode('utf-8')).hexdigest(), 16)
     
-    # Contextual Emoji and Advice routing matching user parameter conditions
-    if user_metrics['Controversy Density'] >= 70:
-        st.warning("🔥 **Decoded Thread Status: High Friction Alert!** This parameter layout is highly controversial.")
-        advice_strategy = "⚠️ **Strategic Content Advice:** High controversy weights drive enormous comment counts, but risk getting downvoted into oblivion. Introduce open-ended phrasing like *'What is your neutral perspective on...?'* to soften reporting blocks and retain broad algorithmic traction."
-    elif user_metrics['Emotional Resonation Weight'] >= 60:
-        st.success("💖 **Decoded Thread Status: Emotional Resonance Triggered!** This configuration values personal storytelling.")
-        advice_strategy = "✨ **Strategic Content Advice:** Users love reading real stories. Structure the title to invite personal testimonials (e.g., *'What is a moment that changed everything for you?'*). This mirrors the high engagement seen in the 5.9M comments database."
+    virality_chance = 40 + (hash_int % 56)       # Scaled between 40% and 95%
+    engagement_score = 150 + (hash_int % 801)    # Scaled between 150 and 950
+    retention_index = 35 + (hash_int % 61)       # Scaled between 35% and 95%
+    
+    # Strategic evaluation conditional statements + Context Emojis
+    if "Controversial" in user_hook:
+        emoji_token = "🚨"
+        status_banner = st.warning
+        advice_msg = "Your chosen hook relies heavily on debate. This structure triggers high reply volume but can reduce your overall upvote ratio. Consider reframing the title to ask for explanations rather than binary choices to build healthier discussions."
+    elif "Stories" in user_length:
+        emoji_token = "📖"
+        status_banner = st.success
+        advice_msg = "Your question targets long-form narratives, mapping perfectly to the `reddit_answers_long.csv` sub-table structure. This format generates high user session retention indices. Ensure the prompt sounds open-ended and highly empathetic."
+    elif user_traffic >= 8:
+        emoji_token = "🔥"
+        status_banner = st.success
+        advice_msg = "Posting during peak queue traffic maximize your initial visibility score. Keep your phrasing brief so mobile scrolling app users can digest it instantly within 2 seconds."
     else:
-        st.info("💡 **Decoded Thread Status: Informational / Objective Mode.** Standard conversational profile identified.")
-        advice_strategy = "📝 **Strategic Content Advice:** Your parameters favor factual or casual responses. Ensure text clarity is peak and post during active high-traffic windows (3 PM - 8 PM EST) to maximize sub-thread visibility."
+        emoji_token = "🤔"
+        status_banner = st.info
+        advice_msg = "This profile establishes a balanced conversational track. To climb past the global average 31.3 replies benchmark, add an examples tag inside your text (e.g., *'..., and why?'*) to lower response thresholds for participants."
 
-    # Render original 3-column KPI score blocks
+    # Render top-level prediction stats
+    status_banner(f"### {emoji_token} Content Assessment Status: Analysis Profile Completed!")
+    
     kpi1, kpi2, kpi3 = st.columns(3)
-    kpi1.metric("Predicted Virality Index", f"{calculated_viral_chance}% Probability")
-    kpi2.metric("Estimated Replies Count", f"{calculated_replies_density} Replies / Hour")
-    kpi3.metric("Assigned Upvote Tier", f"{projected_upvotes:,} Votes")
-
-    # Render the detailed context box
+    kpi1.metric("Predicted Virality Likelihood", f"{virality_chance}%")
+    kpi2.metric("Composite Engagement Rating", f"{engagement_score} / 1000")
+    kpi3.metric("User Retention Index", f"{retention_index}%")
+    
+    # Main advice description card
     st.markdown(f"""
-    <div class="reddit-box">
-        <div class="advice-header">📖 Core Analytical Meaning & Subtext Profile:</div>
-        <p>Your content target focus matches the Wikipedia focus of the dataset description: <i>"to ask and answer questions that elicit thought-provoking discussions"</i>.</p>
-        <hr style="margin: 12px 0; border:0; border-top: 1px solid #e2e8f0;">
-        <div class="advice-header">🎯 Custom Campaign Strategy Recommendation:</div>
-        <p>{advice_strategy}</p>
+    <div class="result-box">
+        <div class="advice-title">📖 Your Question Submission Subtext:</div>
+        <p style="font-size:16px; color:#334155;"><b>"{user_question}"</b></p>
+        <hr style="margin: 12px 0; border:0; border-top: 1px solid #cbd5e1;">
+        <div class="advice-title">🎯 Tailored Optimization Strategy Guide:</div>
+        <p style="font-size:15px; color:#475569;">{advice_msg}</p>
     </div>
     """, unsafe_allow_html=True)
 
-    # --- 6. PLOTLY GROUPED BAR CHART VISUALS ---
-    st.markdown("### 📈 Visual Benchmarks: Your Simulated Metric Blueprint vs Dataset Averages")
-    
-    chart_metrics = ['Virality Probability (%)', 'Replies Volume Index']
-    user_chart_vals = [calculated_viral_chance, calculated_replies_density]
-    global_chart_vals = [68.0, 31.3] # Extracted statistical dataset metadata averages
+    # --- 6. PLOTLY GRAPH CONFIGURATION ---
+    st.markdown("### 📈 Performance Visual Analytics: Your Answer Profile vs Dataset Baseline")
     
     fig_comp = go.Figure()
+    # User submission trace
     fig_comp.add_trace(go.Bar(
-        x=chart_metrics,
-        y=user_chart_vals,
-        name="Your Simulated Profile Configuration",
-        marker_color='#FF4500' # Official Reddit Orange branding
+        x=['Virality Scale (%)', 'Engagement Index / 10', 'Retention Weight (%)'],
+        y=[virality_chance, engagement_score / 10, retention_index],
+        name="Your Answer Strategy",
+        marker_color='#FF4500' # Official Reddit styling branding
     ))
+    # Global benchmark dataset trace
     fig_comp.add_trace(go.Bar(
-        x=chart_metrics,
-        y=global_chart_vals,
-        name="Global AskReddit Base Database Average",
+        x=['Virality Scale (%)', 'Engagement Index / 10', 'Retention Weight (%)'],
+        y=[65.0, 50.0, 55.0], # Precalculated global standard reference points
+        name="Global AskReddit Corpus Baseline",
         marker_color='#9CA3AF'
     ))
-
+    
     fig_comp.update_layout(
         barmode='group',
         title={
-            'text': "Engagement Distribution Index Comparison Matrix",
+            'text': f"Thread Parameter Footprint Evaluation ({user_hook})",
             'y': 0.95, 'x': 0.5, 'xanchor': 'center'
         },
-        yaxis_title="Rating Intensity Value Scale",
-        legend_title="Configuration Matrix Profiles",
+        yaxis_title="Normalized Scoring Matrix Values",
+        legend_title="Evaluation Matrices",
         template="plotly_white",
         height=450,
         margin=dict(t=80, b=40)
     )
     st.plotly_chart(fig_comp, use_container_width=True)
 
-    # --- 7. REFERENCE TABLE GRID MATRIX ---
-    st.markdown("### 📋 Dataset Document Cross-Reference Grid Schema")
+    # --- 7. STRUCTURAL DATA REFERENCE GRID ---
+    st.markdown("### 📋 Dataset Corpus Schema Reference Grid")
+    st.write("This table details how your strategy routes across the data distribution layers listed in your metadata JSON file:")
     
-    breakdown_data = [
-        {"File Asset Tracked": "reddit_questions.csv", "Total Rows": "189,565 Rows", "Core Features Provided": "id, text, votes, timestamp, datetime", "Primary Field Function": "Root Thread Query Content"},
-        {"File Asset Tracked": "reddit_answers.csv", "Total Rows": "5,566,660 Rows", "Core Features Provided": "index, q_id, text, votes", "Primary Field Function": "Standard Replies Text Corpus"},
-        {"File Asset Tracked": "reddit_answers_long.csv", "Total Rows": "374,167 Rows", "Core Features Provided": "index, q_id, text, votes", "Primary Field Function": "Long-form Text NLP Features Focus"}
+    grid_data = [
+        {"Dataset Partition Table": "reddit_questions.csv", "Database Dimensions": "189,565 Rows", "Tracked Target Fields": "id, text, votes, timestamp, datetime", "Your Strategy Context Route": "Evaluates title question string length metrics."},
+        {"Dataset Partition Table": "reddit_answers.csv", "Database Dimensions": "5,566,660 Rows", "Tracked Target Fields": "index, q_id, text, votes", "Your Strategy Context Route": "Evaluates standard short-to-medium length comments density indices."},
+        {"Dataset Partition Table": "reddit_answers_long.csv", "Database Dimensions": "374,167 Rows", "Tracked Target Fields": "index, q_id, text, votes", "Your Strategy Context Route": "Evaluates complex text structures and descriptive story-driven narratives."}
     ]
-    st.table(pd.DataFrame(breakdown_data))
+    st.table(pd.DataFrame(grid_data))
 
-    # --- 8. AUTOMATED INSIGHTS GENERATION SUMMARY ---
-    st.markdown("### 💡 Automated Strategic Insights Summary")
-    st.markdown(f"""
-    <div style="background-color: #fff5f5; padding: 15px; border-radius: 8px; border: 1px solid #fed7d7;">
-        <ul>
-            <li><b>Corpus Relevance:</b> The primary subject matter (<u>{target_category}</u>) targets structural alignment criteria for conversational NLP dialogue testing datasets.</li>
-            <li><b>Upvote Vector Checklist:</b> Your set parameter objective of <b>{projected_upvotes:,} upvotes</b> scales into the top 15% tier profile band compared against the broad 189,565 threads database.</li>
-            <li><b>Actionable Execution:</b> To fulfill the 31.3 replies global average ratio target, configure follow-up queries inside your comment blocks to build sub-thread chains.</li>
-        </ul>
-    </div>
-    """, unsafe_allow_html=True)
-else:
-    st.info("💡 Fill out the parameter fields inside the simulator block above and click **'Parse Thread Dynamics & Predict Engagement'** to trigger your text validation strategies, advice, and charts.")
+    # --- 8. AUTOMATED INSIGHTS GENERATION BLOCK ---
+    if include_insights:
+        st.markdown("### 💡 Automated Optimization Summary Insights")
+        st.markdown(f"""
+        <div style="background-color: #f0fdf4; padding: 16px; border-radius: 8px; border: 1px solid #bbf7d0;">
+            <ul>
+                <li>The chosen hook focus <b>({user_hook})</b> paired
