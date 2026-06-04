@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom premium styling classes
+# Custom visual layout card treatments
 st.markdown("""
 <style>
     .interview-card {
@@ -45,7 +45,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🧠 AskReddit Interactive Assessment & Strategy Portal")
+st.title("🍊 AskReddit Interactive Assessment & Strategy Portal")
 st.write("Answer the strategic content questions below to evaluate your simulated thread performance against the global community baselines.")
 
 # --- 1. LOAD THE DATASET METADATA SAFELY ---
@@ -56,7 +56,6 @@ def load_metadata():
         with open(filename, "r", encoding="utf-8") as file:
             return json.load(file)
     else:
-        # Resilient structural schema fallback
         return {
             "name": "AskReddit questions and answers",
             "alternateName": "Q&A on anything and everything",
@@ -88,13 +87,11 @@ with ov_col4:
 
 st.markdown("---")
 
-# --- 4. INTERACTIVE QUESTIONNAIRE INTERFACE (Form-Based) ---
+# --- 4. INTERACTIVE QUESTIONNAIRE INTERFACE ---
 st.subheader("📋 Context Interview: Answer the System Questions")
 st.markdown("Provide your design choices below to evaluate your thread's potential traction.")
 
 with st.form("askreddit_interview_form"):
-    
-    # Let's organize the interview questions inside neat design blocks
     st.markdown('<div class="interview-card">', unsafe_allow_html=True)
     
     col_q1, col_q2 = st.columns(2)
@@ -114,7 +111,6 @@ with st.form("askreddit_interview_form"):
         
     st.markdown('</div>', unsafe_allow_html=True)
     
-    # Custom profile name identifier
     st.markdown("##### 🔑 Submitter Credentials:")
     col_meta1, col_meta2 = st.columns(2)
     with col_meta1:
@@ -124,71 +120,62 @@ with st.form("askreddit_interview_form"):
         
     submit_button = st.form_submit_button(label="🎯 Submit My Answers & Analyze Content")
 
-# --- 5. COMPUTE & DISPLAY EVALUATION RESULTS UPON SUBMISSION ---
+# --- 5. COMPUTE & DISPLAY EVALUATION RESULTS ---
 if submit_button:
     st.markdown("---")
     st.markdown(f"## ⚡ Diagnostic Strategy Results for {analyst_name}")
     
-    # Generate deterministic evaluation metrics using data text hashing
     seed_str = f"{user_hook}-{user_length}-{user_traffic}"
     hash_int = int(hashlib.md5(seed_str.encode('utf-8')).hexdigest(), 16)
     
-    virality_chance = 40 + (hash_int % 56)       # Scaled between 40% and 95%
-    engagement_score = 150 + (hash_int % 801)    # Scaled between 150 and 950
-    retention_index = 35 + (hash_int % 61)       # Scaled between 35% and 95%
+    virality_chance = 40 + (hash_int % 56)       
+    engagement_score = 150 + (hash_int % 801)    
+    retention_index = 35 + (hash_int % 61)       
     
-    # Strategic evaluation conditional statements + Context Emojis
     if "Controversial" in user_hook:
         emoji_token = "🚨"
-        status_banner = st.warning
+        st.warning(f"### {emoji_token} Content Assessment Status: Analysis Profile Completed!")
         advice_msg = "Your chosen hook relies heavily on debate. This structure triggers high reply volume but can reduce your overall upvote ratio. Consider reframing the title to ask for explanations rather than binary choices to build healthier discussions."
     elif "Stories" in user_length:
         emoji_token = "📖"
-        status_banner = st.success
+        st.success(f"### {emoji_token} Content Assessment Status: Analysis Profile Completed!")
         advice_msg = "Your question targets long-form narratives, mapping perfectly to the `reddit_answers_long.csv` sub-table structure. This format generates high user session retention indices. Ensure the prompt sounds open-ended and highly empathetic."
     elif user_traffic >= 8:
         emoji_token = "🔥"
-        status_banner = st.success
-        advice_msg = "Posting during peak queue traffic maximize your initial visibility score. Keep your phrasing brief so mobile scrolling app users can digest it instantly within 2 seconds."
+        st.success(f"### {emoji_token} Content Assessment Status: Analysis Profile Completed!")
+        advice_msg = "Posting during peak queue traffic maximizes your initial visibility score. Keep your phrasing brief so mobile scrolling app users can digest it instantly within 2 seconds."
     else:
         emoji_token = "🤔"
-        status_banner = st.info
-        advice_msg = "This profile establishes a balanced conversational track. To climb past the global average 31.3 replies benchmark, add an examples tag inside your text (e.g., *'..., and why?'*) to lower response thresholds for participants."
+        st.info(f"### {emoji_token} Content Assessment Status: Analysis Profile Completed!")
+        advice_msg = "This profile establishes a balanced conversational track. To climb past the global average 31.3 replies benchmark, add an examples tag inside your text (e.g., '..., and why?') to lower response thresholds for participants."
 
-    # Render top-level prediction stats
-    status_banner(f"### {emoji_token} Content Assessment Status: Analysis Profile Completed!")
-    
     kpi1, kpi2, kpi3 = st.columns(3)
     kpi1.metric("Predicted Virality Likelihood", f"{virality_chance}%")
     kpi2.metric("Composite Engagement Rating", f"{engagement_score} / 1000")
     kpi3.metric("User Retention Index", f"{retention_index}%")
     
-    # Main advice description card
-    st.markdown(f"""
-    <div class="result-box">
-        <div class="advice-title">📖 Your Question Submission Subtext:</div>
-        <p style="font-size:16px; color:#334155;"><b>"{user_question}"</b></p>
-        <hr style="margin: 12px 0; border:0; border-top: 1px solid #cbd5e1;">
-        <div class="advice-title">🎯 Tailored Optimization Strategy Guide:</div>
-        <p style="font-size:15px; color:#475569;">{advice_msg}</p>
-    </div>
-    """, unsafe_allow_html=True)
+    # Rendered securely without triple-quoted template layout conflicts
+    st.markdown('<div class="result-box">', unsafe_allow_html=True)
+    st.markdown('<div class="advice-title">📖 Your Question Submission Subtext:</div>', unsafe_allow_html=True)
+    st.markdown(f'<p style="font-size:16px; color:#334155;"><b>"{user_question}"</b></p>', unsafe_allow_html=True)
+    st.markdown('<hr style="margin: 12px 0; border:0; border-top: 1px solid #cbd5e1;">', unsafe_allow_html=True)
+    st.markdown('<div class="advice-title">🎯 Tailored Optimization Strategy Guide:</div>', unsafe_allow_html=True)
+    st.markdown(f'<p style="font-size:15px; color:#475569;">{advice_msg}</p>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # --- 6. PLOTLY GRAPH CONFIGURATION ---
     st.markdown("### 📈 Performance Visual Analytics: Your Answer Profile vs Dataset Baseline")
     
     fig_comp = go.Figure()
-    # User submission trace
     fig_comp.add_trace(go.Bar(
         x=['Virality Scale (%)', 'Engagement Index / 10', 'Retention Weight (%)'],
         y=[virality_chance, engagement_score / 10, retention_index],
         name="Your Answer Strategy",
-        marker_color='#FF4500' # Official Reddit styling branding
+        marker_color='#FF4500'
     ))
-    # Global benchmark dataset trace
     fig_comp.add_trace(go.Bar(
         x=['Virality Scale (%)', 'Engagement Index / 10', 'Retention Weight (%)'],
-        y=[65.0, 50.0, 55.0], # Precalculated global standard reference points
+        y=[65.0, 50.0, 55.0], 
         name="Global AskReddit Corpus Baseline",
         marker_color='#9CA3AF'
     ))
@@ -209,7 +196,6 @@ if submit_button:
 
     # --- 7. STRUCTURAL DATA REFERENCE GRID ---
     st.markdown("### 📋 Dataset Corpus Schema Reference Grid")
-    st.write("This table details how your strategy routes across the data distribution layers listed in your metadata JSON file:")
     
     grid_data = [
         {"Dataset Partition Table": "reddit_questions.csv", "Database Dimensions": "189,565 Rows", "Tracked Target Fields": "id, text, votes, timestamp, datetime", "Your Strategy Context Route": "Evaluates title question string length metrics."},
@@ -224,4 +210,11 @@ if submit_button:
         st.markdown(f"""
         <div style="background-color: #f0fdf4; padding: 16px; border-radius: 8px; border: 1px solid #bbf7d0;">
             <ul>
-                <li>The chosen hook focus <b>({user_hook})</b> paired
+                <li>The chosen hook focus <b>({user_hook})</b> paired with the target length parameter generates an ideal audience engagement footprint that fits the training needs of dialogue modeling text systems.</li>
+                <li>Your projected traffic level intensity of <b>{user_traffic} points out of 10</b> indicates an optimized algorithmic submission sequence pipeline.</li>
+                <li><b>Action Item:</b> Try modifying the text structure slightly by adding an intriguing bracketed qualifier tag at the start (e.g., <i>[Serious]</i>) to shift the text style into a high-authority category band instantly.</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+else:
+    st.info("💡 Complete the interview survey questionnaire questions inside the white block above and click 'Submit My Answers & Analyze Content' to view your custom analysis scores, emojis, advice, and charts.")
