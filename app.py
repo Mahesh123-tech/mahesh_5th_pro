@@ -5,7 +5,7 @@ import random
 
 # Set page configuration parameters
 st.set_page_config(
-    page_title="Multi-Round GK Quiz Portal",
+    page_title="Advanced Multi-Type GK Quiz Portal",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -42,68 +42,78 @@ st.markdown("""
         font-size: 16px;
         margin-bottom: 5px;
     }
-    .insight-card {
+    .group-box {
         background-color: #f8fafc;
-        padding: 20px;
-        border-radius: 12px;
-        border: 1px solid #cbd5e1;
-        margin-top: 20px;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px dashed #cbd5e1;
+        margin-bottom: 15px;
+        font-weight: 500;
+        color: #334155;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Master Question Bank (50 Unique Questions to perfectly support 5 rounds of 10)
+# --- EXPANDED MASTER QUIZ BANK WITH 3 DISTINCT ARCHETYPES ---
+# Fully contains 50 unique items to seamlessly populate up to 5 rounds without repeating.
 MASTER_QUIZ_BANK = [
-    {"id": 1, "category": "Astronomy", "question": "Which planet in our solar system is known as the Red Planet?", "accepted_answers": ["mars"], "display_correct": "Mars", "fact": "Mars looks red because of iron oxide (rust) on its surface."},
-    {"id": 2, "category": "Geography", "question": "What is the longest river in the world?", "accepted_answers": ["nile", "nile river"], "display_correct": "Nile River", "fact": "The Nile stretches roughly 6,650 kilometers through northeastern Africa."},
-    {"id": 3, "category": "Science", "question": "What is the hardest natural substance known on Earth?", "accepted_answers": ["diamond", "diamonds"], "display_correct": "Diamond", "fact": "Diamonds are made of pure carbon atoms tightly packed in a crystal lattice."},
-    {"id": 4, "category": "History", "question": "Who was the first President of the United States?", "accepted_answers": ["george washington", "washington"], "display_correct": "George Washington", "fact": "George Washington served from 1789 to 1797."},
-    {"id": 5, "category": "Oceanography", "question": "Which ocean is the largest and deepest on Earth?", "accepted_answers": ["pacific", "pacific ocean"], "display_correct": "Pacific Ocean", "fact": "The Pacific Ocean covers over 30% of the Earth's surface."},
-    {"id": 6, "category": "Biology", "question": "What is the powerhouse of the cell?", "accepted_answers": ["mitochondria", "mitochondrion"], "display_correct": "Mitochondria", "fact": "Mitochondria generate most of the cell's supply of ATP, used as a source of chemical energy."},
-    {"id": 7, "category": "Geography", "question": "What is the capital city of France?", "accepted_answers": ["paris"], "display_correct": "Paris", "fact": "Paris has been a major center of finance, diplomacy, commerce, fashion, and science since the 17th century."},
-    {"id": 8, "category": "Chemistry", "question": "What is the chemical symbol for water?", "accepted_answers": ["h2o"], "display_correct": "H2O", "fact": "A molecule of water contains one oxygen and two hydrogen atoms connected by covalent bonds."},
-    {"id": 9, "category": "History", "question": "Which empire constructed the Colosseum in Rome?", "accepted_answers": ["roman", "roman empire"], "display_correct": "The Roman Empire", "fact": "The Colosseum could hold an estimated 50,000 to 80,000 spectators during its time."},
-    {"id": 10, "category": "Literature", "question": "Who wrote the tragedy play 'Romeo and Juliet'?", "accepted_answers": ["william shakespeare", "shakespeare"], "display_correct": "William Shakespeare", "fact": "Shakespeare wrote Romeo and Juliet early in his career, somewhere between 1591 and 1595."},
-    {"id": 11, "category": "Physics", "question": "What force pulls objects toward the center of the Earth?", "accepted_answers": ["gravity", "gravitational force"], "display_correct": "Gravity", "fact": "Gravity is a fundamental interaction that causes mutual attraction between all things with mass or energy."},
-    {"id": 12, "category": "Geography", "question": "Which country has the largest population in the world?", "accepted_answers": ["india"], "display_correct": "India", "fact": "India officially surpassed China in population demographics in the mid-2020s."},
-    {"id": 13, "category": "Art", "question": "Who painted the famous 'Mona Lisa'?", "accepted_answers": ["leonardo da vinci", "da vinci"], "display_correct": "Leonardo da Vinci", "fact": "The painting is thought to be a portrait of Lisa Gherardini, the wife of Francesco del Giocondo."},
-    {"id": 14, "category": "Chemistry", "question": "What is the chemical symbol for Gold?", "accepted_answers": ["au"], "display_correct": "Au", "fact": "Its symbol Au comes from the Latin word 'aurum', meaning shining dawn."},
-    {"id": 15, "category": "Astronomy", "question": "What is the name of the closest star to Earth?", "accepted_answers": ["sun", "the sun"], "display_correct": "The Sun", "fact": "The Sun is a nearly perfect ball of hot plasma, heated to incandescence by nuclear fusion reactions in its core."},
-    {"id": 16, "category": "History", "question": "In which year did World War II end?", "accepted_answers": ["1945"], "display_correct": "1945", "fact": "World War II officially concluded with the formal signing of surrender documents aboard the USS Missouri on Sept 2, 1945."},
-    {"id": 17, "category": "Music", "question": "How many keys are there on a standard classical piano?", "accepted_answers": ["88"], "display_correct": "88", "fact": "A standard piano includes 52 white keys and 36 black keys for a total of 88 keys."},
-    {"id": 18, "category": "Zoology", "question": "What is the largest mammal currently alive on Earth?", "accepted_answers": ["blue whale", "whale"], "display_correct": "Blue Whale", "fact": "Blue whales can grow up to 30 meters in length and weigh over 190 short tons."},
-    {"id": 19, "category": "Geography", "question": "Which continent is the South Pole located on?", "accepted_answers": ["antarctica"], "display_correct": "Antarctica", "fact": "Antarctica is the coldest, driest, and windiest continent on Earth."},
-    {"id": 20, "category": "Science", "question": "What gas do humans need to breathe in to survive?", "accepted_answers": ["oxygen", "o2"], "display_correct": "Oxygen", "fact": "Oxygen is crucial for cellular respiration in most living organisms."},
-    {"id": 21, "category": "Technology", "question": "What does 'WWW' stand for in a website URL browser context?", "accepted_answers": ["world wide web"], "display_correct": "World Wide Web", "fact": "The World Wide Web was invented by Sir Tim Berners-Lee in 1989."},
-    {"id": 22, "category": "Mathematics", "question": "What is the square root of 144?", "accepted_answers": ["12"], "display_correct": "12", "fact": "$12 \\times 12 = 144$."},
-    {"id": 23, "category": "History", "question": "Which country gifted the Statue of Liberty to the United States?", "accepted_answers": ["france"], "display_correct": "France", "fact": "The statue was designed by Frédéric-Auguste Bartholdi and given to commemorate the alliance between the nations."},
-    {"id": 24, "category": "Geography", "question": "What is the smallest country in the world by land area?", "accepted_answers": ["vatican city", "vatican"], "display_correct": "Vatican City", "fact": "Vatican City measures just roughly 0.49 square kilometers in total area."},
-    {"id": 25, "category": "Botany", "question": "What pigment gives plants their green coloration?", "accepted_answers": ["chlorophyll"], "display_correct": "Chlorophyll", "fact": "Chlorophyll absorbs energy from light, which is fundamental for photosynthesis processes."},
-    {"id": 26, "category": "Literature", "question": "Who wrote the fantasy novel series 'Harry Potter'?", "accepted_answers": ["j.k. rowling", "jk rowling", "rowling"], "display_correct": "J.K. Rowling", "fact": "The seven books have sold more than 600 million copies worldwide."},
-    {"id": 27, "category": "Anatomy", "question": "What is the largest organ of the human body?", "accepted_answers": ["skin"], "display_correct": "Skin", "fact": "The skin accounts for about 16% of body weight and covers a surface area of close to 2 square meters."},
-    {"id": 28, "category": "Sports", "question": "How many players are on the field for one team in a standard soccer match?", "accepted_answers": ["11"], "display_correct": "11", "fact": "A match is played by two teams, each containing a maximum of 11 players, one of whom must be the goalkeeper."},
-    {"id": 29, "category": "Meteorology", "question": "What instrument is used by scientists to measure atmospheric air pressure?", "accepted_answers": ["barometer"], "display_correct": "Barometer", "fact": "Evangelista Torricelli is generally credited with inventing the barometer in 1643."},
-    {"id": 30, "category": "History", "question": "Who was the ancient queen of Egypt famously associated with Julius Caesar and Mark Antony?", "accepted_answers": ["cleopatra"], "display_correct": "Cleopatra", "fact": "Cleopatra belonged to the Ptolemaic dynasty, a Greek-speaking royal family that ruled Egypt."},
-    {"id": 31, "category": "Geography", "question": "What is the highest mountain peak above sea level in the world?", "accepted_answers": ["mount everest", "everest"], "display_correct": "Mount Everest", "fact": "The international border between China and Nepal runs across its summit point."},
-    {"id": 32, "category": "Chemistry", "question": "What is the lightest element on the periodic table?", "accepted_answers": ["hydrogen"], "display_correct": "Hydrogen", "fact": "Hydrogen is the most abundant chemical substance in the Universe, constituting roughly 75% of all baryonic mass."},
-    {"id": 33, "category": "Astronomy", "question": "What galaxy is our solar system located in?", "accepted_answers": ["milky way", "milky way galaxy"], "display_correct": "Milky Way Galaxy", "fact": "The Milky Way is a barred spiral galaxy with an estimated diameter of 100,000–200,000 light-years."},
-    {"id": 34, "category": "History", "question": "Who was the primary author of the American Declaration of Independence?", "accepted_answers": ["thomas jefferson", "jefferson"], "display_correct": "Thomas Jefferson", "fact": "Jefferson composed the declaration between June 11 and June 28, 1776."},
-    {"id": 35, "category": "Zoology", "question": "What is the only mammal capable of true, sustained flight?", "accepted_answers": ["bat", "bats"], "display_correct": "Bats", "fact": "Bats are more maneuverable fliers than most birds, flying with very long spread-out digits covered with a thin membrane."},
-    {"id": 36, "category": "Geography", "question": "Which country is also known as the Land of the Rising Sun?", "accepted_answers": ["japan"], "display_correct": "Japan", "fact": "The kanji characters that make up Japan's name mean 'sun origin', which is why it's often referred to this way."},
-    {"id": 37, "category": "Science", "question": "How many bones are there in an average adult human body?", "accepted_answers": ["206"], "display_correct": "206", "fact": "Human infants are born with around 270 bones, which fuse together as the skeleton matures."},
-    {"id": 38, "category": "Computer Science", "question": "What does CPU stand for?", "accepted_answers": ["central processing unit"], "display_correct": "Central Processing Unit", "fact": "The CPU performs basic arithmetic, logic, controlling, and input/output operations specified by instructions."},
-    {"id": 39, "category": "Mythology", "question": "Who was the supreme king of the gods in ancient Greek mythology?", "accepted_answers": ["zeus"], "display_correct": "Zeus", "fact": "Zeus was revered as a sky and thunder god, ruling from the heights of Mount Olympus."},
-    {"id": 40, "category": "Inventions", "question": "Who is universally credited with inventing the telephone?", "accepted_answers": ["alexander graham bell", "alexander bell", "bell"], "display_correct": "Alexander Graham Bell", "fact": "Bell was awarded the first US patent for the telephone in March of 1876."},
-    {"id": 41, "category": "Geography", "question": "What is the capital city of Australia?", "accepted_answers": ["canberra"], "display_correct": "Canberra", "fact": "Canberra was selected as a compromise location between rivals Sydney and Melbourne in 1908."},
-    {"id": 42, "category": "History", "question": "Which historical figure was famously known as the Maid of Orléans?", "accepted_answers": ["joan of arc", "jeanne d'arc"], "display_correct": "Joan of Arc", "fact": "Joan of Arc was canonized as a saint of the Catholic Church after her role in the Hundred Years' War."},
-    {"id": 43, "category": "Art", "question": "Which artist famously cut off part of his own left ear?", "accepted_answers": ["vincent van gogh", "van gogh"], "display_correct": "Vincent van Gogh", "fact": "Van Gogh suffered from severe psychotic episodes and depression throughout his artistic life."},
-    {"id": 44, "category": "Oceanography", "question": "What is the name of the deepest known point in the world's oceans?", "accepted_answers": ["mariana trench", "challenger deep"], "display_correct": "Challenger Deep (Mariana Trench)", "fact": "It is located in the Western Pacific Ocean and plunges nearly 11,000 meters down."},
-    {"id": 45, "category": "Science", "question": "What temperature is the freezing point of water in degrees Celsius?", "accepted_answers": ["0", "0 degrees celsius", "0 celsius"], "display_correct": "0°C", "fact": "By definition, water freezes at 0 degrees under standard atmospheric pressures."},
-    {"id": 46, "category": "Literature", "question": "Who wrote the classic adventure novel 'Moby-Dick'?", "accepted_answers": ["herman melville", "melville"], "display_correct": "Herman Melville", "fact": "The book was initially a commercial failure but is now considered an anchor of American literature."},
-    {"id": 47, "category": "Architecture", "question": "In which country can you find the ancient landmark structures of Petra?", "accepted_answers": ["jordan"], "display_correct": "Jordan", "fact": "Petra is famous for its rock-cut architecture and innovative water conduit system."},
-    {"id": 48, "category": "Physics", "question": "Which famous scientist formulated the theory of General Relativity?", "accepted_answers": ["albert einstein", "einstein"], "display_correct": "Albert Einstein", "fact": "Einstein revolutionized modern physics with his formulations of relativity and mass-energy equivalence."},
-    {"id": 49, "category": "Geography", "question": "Which US state is entirely made up of volcanic islands?", "accepted_answers": ["hawaii"], "display_correct": "Hawaii", "fact": "Hawaii is the only US state located outside North America and the only one that is an island archipelago."},
-    {"id": 50, "category": "History", "question": "Who was the leader of the Soviet Union during World War II?", "accepted_answers": ["joseph stalin", "stalin"], "display_correct": "Joseph Stalin", "fact": "Stalin led the Soviet Union through its industrialization and the critical victory over Axis forces."}
+    # TYPE 1: TEXT QUESTIONS
+    {"id": 1, "type": "text", "category": "Astronomy", "question": "Which planet in our solar system is known as the Red Planet?", "accepted_answers": ["mars"], "display_correct": "Mars", "fact": "Mars looks red because of iron oxide (rust) on its surface."},
+    {"id": 2, "type": "text", "category": "Geography", "question": "What is the longest river in the world?", "accepted_answers": ["nile", "nile river"], "display_correct": "Nile River", "fact": "The Nile stretches roughly 6,650 kilometers through northeastern Africa."},
+    {"id": 3, "type": "text", "category": "Science", "question": "What is the hardest natural substance known on Earth?", "accepted_answers": ["diamond", "diamonds"], "display_correct": "Diamond", "fact": "Diamonds are made of pure carbon atoms tightly packed in a crystal lattice."},
+    {"id": 4, "type": "text", "category": "History", "question": "Who was the first President of the United States?", "accepted_answers": ["george washington", "washington"], "display_correct": "George Washington", "fact": "George Washington served from 1789 to 1797."},
+    {"id": 5, "type": "text", "category": "Oceanography", "question": "Which ocean is the largest and deepest on Earth?", "accepted_answers": ["pacific", "pacific ocean"], "display_correct": "Pacific Ocean", "fact": "The Pacific Ocean covers over 30% of the Earth's surface."},
+    {"id": 6, "type": "text", "category": "Biology", "question": "What is considered the master powerhouse component of the living cell?", "accepted_answers": ["mitochondria", "mitochondrion"], "display_correct": "Mitochondria", "fact": "Mitochondria generate most of the cell's structural chemical energy reserves."},
+    {"id": 7, "type": "text", "category": "Chemistry", "question": "What is the base molecular chemical symbol for pure water?", "accepted_answers": ["h2o"], "display_correct": "H2O", "fact": "A molecule of water contains one oxygen and two hydrogen atoms connected by covalent bonds."},
+    {"id": 8, "type": "text", "category": "Art", "question": "Which legendary Renaissance artist painted the famous 'Mona Lisa' portrait?", "accepted_answers": ["leonardo da vinci", "da vinci"], "display_correct": "Leonardo da Vinci", "fact": "The painting is thought to be a portrait of Lisa Gherardini."},
+    {"id": 9, "type": "text", "category": "Anatomy", "question": "What is the single largest organ of the human body?", "accepted_answers": ["skin"], "display_correct": "Skin", "fact": "The skin accounts for about 16% of entire human adult body weight structural volume."},
+    {"id": 10, "type": "text", "category": "Physics", "question": "Which famous scientist formulated the structural theory of General Relativity?", "accepted_answers": ["albert einstein", "einstein"], "display_correct": "Albert Einstein", "fact": "Einstein revolutionized modern physics with his formulations of relativity."},
+
+    # TYPE 2: PICTURE / VISUAL PUZZLES
+    {"id": 11, "type": "picture", "category": "Visual Landmarks", "image_url": "https://images.unsplash.com/photo-1543349689-9a4d426bee8e?w=500", "question": "Identify this historic European iron tower structure located in Paris:", "accepted_answers": ["eiffel tower", "eiffel"], "display_correct": "Eiffel Tower", "fact": "Completed in 1889, it was built as the entrance arch for the World's Fair."},
+    {"id": 12, "type": "picture", "category": "Visual Landmarks", "image_url": "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=500", "question": "Identify this white marble monument built by Shah Jahan in Agra, India:", "accepted_answers": ["taj mahal", "tajmahal"], "display_correct": "Taj Mahal", "fact": "It was commissioned in 1531 to house the tomb of his favorite wife, Mumtaz Mahal."},
+    {"id": 13, "type": "picture", "category": "Visual Monuments", "image_url": "https://images.unsplash.com/photo-1605538032432-a9f0c8d9baac?w=500", "question": "Identify this historic colossal neoclassical sculpture situated on Liberty Island in New York Harbor:", "accepted_answers": ["statue of liberty", "liberty"], "display_correct": "Statue of Liberty", "fact": "A gift from the people of France to the United States, designed by Frédéric-Auguste Bartholdi."},
+    {"id": 14, "type": "picture", "category": "Visual Wonders", "image_url": "https://images.unsplash.com/photo-1608958416715-bc4404fa77df?w=500", "question": "Identify this ancient amphitheatre located in the center of Rome, Italy:", "accepted_answers": ["colosseum", "coliseum"], "display_correct": "The Colosseum", "fact": "It is the largest ancient amphitheatre ever built, and is still the largest standing amphitheatre in the world today."},
+    {"id": 15, "type": "picture", "category": "Visual Nature Puzzles", "image_url": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=500", "question": "Look at this runner. What primary human structural protein component makes up human hair, nails, and outer claws?", "accepted_answers": ["keratin"], "display_correct": "Keratin", "fact": "Keratin protects epithelial cells from damage or stress structural anomalies."},
+    {"id": 16, "type": "picture", "category": "Visual Icons", "image_url": "https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=500", "question": "This abstract fluid structure mimics code patterns. What computing term describes a self-replicating malicious code segment?", "accepted_answers": ["virus", "computer virus"], "display_correct": "Virus", "fact": "The first computer virus was created in 1971 and was named the Creeper program."},
+    {"id": 17, "type": "picture", "category": "Visual Astronomy", "image_url": "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?w=500", "question": "Look at this image of our home planet. What percentage of Earth's surface is covered by liquid water? (Answer with the whole number percentage, e.g., 71)", "accepted_answers": ["71", "71%"], "display_correct": "71%", "fact": "About 71 percent of the Earth's surface is water-covered, and the oceans hold about 96.5 percent of all Earth's water."},
+    {"id": 18, "type": "picture", "category": "Visual Archeology", "image_url": "https://images.unsplash.com/photo-1539650116574-8efeb43e2750?w=500", "question": "Identify the ancient structural wonders shown in this desert setting:", "accepted_answers": ["pyramids", "egyptian pyramids", "pyramids of giza"], "display_correct": "The Pyramids of Giza", "fact": "The Great Pyramid was built for the Fourth Dynasty Pharaoh Khufu and is the oldest of the Seven Wonders of the Ancient World."},
+    {"id": 19, "type": "picture", "category": "Visual Engineering", "image_url": "https://images.unsplash.com/photo-1506157786151-b8491531f063?w=500", "question": "Look at these music headphones. What wireless standard named after a 10th-century Scandinavian king allows short-range digital audio transmission?", "accepted_answers": ["bluetooth"], "display_correct": "Bluetooth", "fact": "Bluetooth was named after King Harald Bluetooth, who united Scandinavian tribes just as the technology unites communication protocols."},
+    {"id": 20, "type": "picture", "category": "Visual Architecture", "image_url": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=500", "question": "This motorcycle represents custom vehicle mechanics. What internal component converts chemical engine explosions into wheels spinning?", "accepted_answers": ["piston", "pistons"], "display_correct": "Piston", "fact": "Pistons transmit force from expanding gas in the cylinder to the crankshaft via a connecting rod."},
+
+    # TYPE 3: GROUP CLASSIFICATION / SEGMENTATION CATEGORY MAPPING PUZZLES
+    {"id": 21, "type": "group", "category": "Platform Mapping", "items": ["WhatsApp", "Email", "Slack"], "question": "What functional industry segment classification category do WhatsApp, Email, and Slack belong to?", "accepted_answers": ["messaging", "communication", "chat"], "display_correct": "Messaging / Communication", "fact": "These applications utilize synchronized protocol gateways to distribute written messaging assets."},
+    {"id": 22, "type": "group", "category": "Platform Mapping", "items": ["YouTube", "Instagram", "TikTok"], "question": "What functional category domain do YouTube, Instagram, and TikTok belong to?", "accepted_answers": ["entertainment", "entertaining", "social media"], "display_correct": "Entertainment / Social Media", "fact": "These platforms optimize algorithmic video matrices to engage consumers looking for dynamic content feeds."},
+    {"id": 23, "type": "group", "category": "Platform Mapping", "items": ["Spotify", "Apple Music", "SoundCloud"], "question": "What operational digital stream classification do Spotify, Apple Music, and SoundCloud belong to?", "accepted_answers": ["audio streaming", "music", "audio", "music streaming"], "display_correct": "Audio / Music Streaming", "fact": "They serve cloud-hosted catalog assets securely using compressed audio codecs over distributed server hubs."},
+    {"id": 24, "type": "group", "category": "Science Mapping", "items": ["Oxygen", "Hydrogen", "Nitrogen"], "question": "What structural phase group state do Oxygen, Hydrogen, and Nitrogen classify as under standard room conditions?", "accepted_answers": ["gas", "gases", "gas state"], "display_correct": "Gases", "fact": "These elements exhibit highly dispersed molecular spacing with negligible intermolecular bounds at room temperature."},
+    {"id": 25, "type": "group", "category": "Financial Mapping", "items": ["Bitcoin", "Ethereum", "Solana"], "question": "What modern asset classification category do Bitcoin, Ethereum, and Solana belong to?", "accepted_answers": ["cryptocurrency", "crypto", "cryptocurrencies"], "display_correct": "Cryptocurrency", "fact": "These digital assets rely on cryptography and decentralized consensus mechanics to secure transactions on a blockchain."},
+    {"id": 26, "type": "group", "category": "Hardware Mapping", "items": ["Keyboard", "Mouse", "Microphone"], "question": "In hardware terms, what structural operational component category group do Keyboards, Mice, and Microphones belong to?", "accepted_answers": ["input devices", "input", "input device"], "display_correct": "Input Devices", "fact": "Input devices convert user-generated interactions into binary signals parsed by the CPU processing engine."},
+    {"id": 27, "type": "group", "category": "Hardware Mapping", "items": ["Monitor", "Printer", "Speakers"], "question": "In hardware terms, what functional classification group do Monitors, Printers, and Speakers belong to?", "accepted_answers": ["output devices", "output", "output device"], "display_correct": "Output Devices", "fact": "Output devices translate computed data blocks into human-readable physical form factors like pixels, ink, or acoustic sound waves."},
+    {"id": 28, "type": "group", "category": "E-Commerce Mapping", "items": ["Amazon", "eBay", "Shopify"], "question": "What macro business industry cluster segment do Amazon, eBay, and Shopify belong to?", "accepted_answers": ["e-commerce", "ecommerce", "online retail", "retail"], "display_correct": "E-Commerce", "fact": "These organizations facilitate the exchange of goods and services globally using digital transaction ledgers and storefront designs."},
+    {"id": 29, "type": "group", "category": "Biology Mapping", "items": ["Lion", "Tiger", "Wolf"], "question": "Based on nutritional dietary classification, what group cluster do Lions, Tigers, and Wolves belong to?", "accepted_answers": ["carnivore", "carnivores", "meat eaters"], "display_correct": "Carnivores", "fact": "Carnivores are organisms that derive their energy and nutrient requirements from a diet consisting exclusively or mainly of animal tissue."},
+    {"id": 30, "type": "group", "category": "Software Mapping", "items": ["Linux", "Windows", "macOS"], "question": "What system software group architecture classification layer do Linux, Windows, and macOS belong to?", "accepted_answers": ["operating system", "operating systems", "os"], "display_correct": "Operating Systems", "fact": "Operating systems manage machine hardware resources directly and abstract system pathways for application software execution layers."},
+    
+    # ADDITIONAL ITEMS FILLING OUT THE TOTAL POOL
+    {"id": 31, "type": "text", "category": "Geography", "question": "What is the capital city of France?", "accepted_answers": ["paris"], "display_correct": "Paris", "fact": "Paris is a global hub for art, fashion, gastronomy, and culture."},
+    {"id": 32, "type": "text", "category": "History", "question": "In which calendar year did World War II officially conclude?", "accepted_answers": ["1945"], "display_correct": "1945", "fact": "The war ended with the formal signing of surrender documents in September 1945."},
+    {"id": 33, "type": "text", "category": "Geography", "question": "Which specific country has the largest population metrics in the world?", "accepted_answers": ["india"], "display_correct": "India", "fact": "India officially surpassed other demographics to take the top population position in the mid-2020s."},
+    {"id": 34, "type": "text", "category": "Mathematics", "question": "What is the square root valuation of the integer 144?", "accepted_answers": ["12"], "display_correct": "12", "fact": "Twelve multiplied by itself yields exactly 144 ($12 \\times 12 = 144$)."},
+    {"id": 35, "type": "text", "category": "Geography", "question": "What is the smallest sovereign country in the world by total land area maps?", "accepted_answers": ["vatican city", "vatican"], "display_correct": "Vatican City", "fact": "Vatican City measures just roughly 0.49 square kilometers in total area footprint."},
+    {"id": 36, "type": "text", "category": "Botany", "question": "What biological pigment gives plants their characteristic green coloration?", "accepted_answers": ["chlorophyll"], "display_correct": "Chlorophyll", "fact": "Chlorophyll permits plants to absorb energy efficiently from light during photosynthesis cycles."},
+    {"id": 37, "type": "text", "category": "Sports", "question": "How many active players are fielded for one team simultaneously during a standard soccer match?", "accepted_answers": ["11"], "display_correct": "11", "fact": "A match is maintained by two competing blocks containing a maximum of 11 players each."},
+    {"id": 38, "type": "text", "category": "Meteorology", "question": "What scientific instrument measures atmospheric air pressure shifts?", "accepted_answers": ["barometer"], "display_correct": "Barometer", "fact": "Evangelista Torricelli is credited with engineering the initial operational barometer format in 1643."},
+    {"id": 39, "type": "text", "category": "Chemistry", "question": "What is the lightest elemental atomic structure listed on the Periodic Table?", "accepted_answers": ["hydrogen"], "display_correct": "Hydrogen", "fact": "Hydrogen makes up roughly 75% of all standard baryonic cosmic mass structures."},
+    {"id": 40, "type": "text", "category": "Astronomy", "question": "What named spiral galaxy contains our specific solar system profile?", "accepted_answers": ["milky way", "milky way galaxy"], "display_correct": "Milky Way Galaxy", "fact": "The Milky Way is a barred spiral system estimated to contain hundreds of billions of stars."},
+    {"id": 41, "type": "group", "category": "Automotive Mapping", "items": ["Tesla", "Ford", "Toyota"], "question": "What manufacturing industry grouping classification do Tesla, Ford, and Toyota belong to?", "accepted_answers": ["automotive", "car manufacturers", "automakers", "cars"], "display_correct": "Automotive / Car Manufacturers", "fact": "These entities specialize in mass engineering, assembly, and sales of motor vehicles globally."},
+    {"id": 42, "type": "group", "category": "Food Mapping", "items": ["Cheddar", "Gouda", "Mozzarella"], "question": "What dairy product culinary class group do Cheddar, Gouda, and Mozzarella belong to?", "accepted_answers": ["cheese", "cheeses"], "display_correct": "Cheese", "fact": "These products are made from coagulated milk proteins separated from liquid whey elements."},
+    {"id": 43, "type": "group", "category": "Currency Mapping", "items": ["Dollar", "Euro", "Yen"], "question": "What legal fiscal tender categorization classification group do the Dollar, Euro, and Yen belong to?", "accepted_answers": ["currency", "currencies", "money", "fiat"], "display_correct": "Currencies / Fiat Money", "fact": "Currencies represent centralized economic units of account recognized as legal tender values by state systems."},
+    {"id": 44, "type": "group", "category": "Language Mapping", "items": ["Python", "Java", "C++"], "question": "What technical engineering software group taxonomy do Python, Java, and C++ belong to?", "accepted_answers": ["programming languages", "programming language", "code", "coding languages"], "display_correct": "Programming Languages", "fact": "These semantic syntax standards translate instructions into logical instructions machine hardware execution stacks process."},
+    {"id": 45, "type": "group", "category": "Season Mapping", "items": ["Summer", "Autumn", "Winter"], "question": "What recurring annual climate division category cycle do Summer, Autumn, and Winter belong to?", "accepted_answers": ["seasons", "season"], "display_correct": "Seasons", "fact": "Seasons result from the Earth's axial tilt relative to its orbital plain trajectory around the Sun."},
+    {"id": 46, "type": "picture", "category": "Visual Aviation", "image_url": "https://images.unsplash.com/photo-1540962351504-03099e0a754b?w=500", "question": "Identify what mode of modern commercial long-distance aerodynamic sky transport is pictured here:", "accepted_answers": ["airplane", "aeroplane", "plane", "aircraft"], "display_correct": "Airplane", "fact": "The Wright brothers achieved the first sustained, controlled, powered heavier-than-air manned flight in 1903."},
+    {"id": 47, "type": "picture", "category": "Visual Art", "image_url": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=500", "question": "This abstract design utilizes colored materials. What physical painting fluid mixture consists of pigments suspended in drying oils?", "accepted_answers": ["oil paint", "oil paints", "oil painting"], "display_correct": "Oil Paint", "fact": "Oil paints became the principal medium used for creating artworks in Europe during the 15th century."},
+    {"id": 48, "type": "picture", "category": "Visual Instruments", "image_url": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500", "question": "Look at this vocal studio tool. What device is used to transform sonic acoustic wave vibrations into electrical signals?", "accepted_answers": ["microphone", "mic"], "display_correct": "Microphone", "fact": "The carbon microphone was independently developed by David Edward Hughes and Thomas Edison in the late 1870s."},
+    {"id": 49, "type": "picture", "category": "Visual Nature", "image_url": "https://images.unsplash.com/photo-1528183429752-a97d0bf99b5a?w=500", "question": "Identify this organic plant organism form factor that produces oxygen via light absorption:", "accepted_answers": ["tree", "trees", "plant"], "display_correct": "Tree", "fact": "Trees act as significant carbon sinks, locking up atmospheric carbon dioxide in wood tissue matrices."},
+    {"id": 50, "type": "picture", "category": "Visual Chronology", "image_url": "https://images.unsplash.com/photo-1508962914676-134849a727f0?w=500", "question": "Identify what mechanical measurement tracker device is shown monitoring temporal units here:", "accepted_answers": ["watch", "pocket watch", "clock", "timepiece"], "display_correct": "Watch / Pocket Watch", "fact": "Mechanical portable timepieces developed in Europe during the 15th-century evolved into wearable wrist-mounted accessories."}
 ]
 
 # --- PERSISTENT SEED & HISTORY STATES LINKED ACROSS ROUNDS ---
@@ -132,28 +142,30 @@ QUESTIONS_PER_ROUND = 10
 PASSING_SCORE = 4
 MAX_ROUNDS = 5
 
-# --- HELPER FUNCTION: GENERATE 10 UNIQUE QUESTIONS ---
+# --- HELPER FUNCTION: GENERATE 10 BALANCED UNIQUE QUESTIONS ---
 def load_round_questions():
-    # Filter out anything that has been globally used in previous rounds
+    # Filter out anything that has been globally blacklisted to ensure zero repetitions
     available_pool = [q for q in MASTER_QUIZ_BANK if q["id"] not in st.session_state.used_question_ids]
     
-    # Fallback safety validation layer: if pool runs completely dry, force reset the global exclusion lock tracking array
+    # Fallback safety reset layer: if the entire master bank is exhausted, clear the system block
     if len(available_pool) < QUESTIONS_PER_ROUND:
         st.session_state.used_question_ids = set()
         available_pool = MASTER_QUIZ_BANK
         
+    # Pick a random varied mix of 10 questions
     selected = random.sample(available_pool, QUESTIONS_PER_ROUND)
     st.session_state.round_questions = selected
-    # Add newly pulled questions straight into global blacklist
+    
+    # Log choices directly into global non-repetition tracking database
     for q in selected:
         st.session_state.used_question_ids.add(q["id"])
 
-# Init active quiz array if empty state registered
+# Init round composition if data is uninitialized
 if not st.session_state.round_questions:
     load_round_questions()
 
 # --- SIDEBAR PRESENTATION & CONFIGURATION CONTROLS ---
-st.sidebar.markdown(f"## 🏅 Stage Level: Round {st.session_state.current_round} / {MAX_ROUNDS}")
+st.sidebar.markdown(f"## 🏅 Game State: Round {st.session_state.current_round} / {MAX_ROUNDS}")
 st.sidebar.markdown("### 🏆 Round Progress Tracking")
 progress_ratio = min(1.0, (st.session_state.current_index) / QUESTIONS_PER_ROUND)
 st.sidebar.progress(progress_ratio)
@@ -162,7 +174,7 @@ st.sidebar.markdown(f"**Progress Track:** Question {min(QUESTIONS_PER_ROUND, st.
 st.sidebar.markdown(f"**Current Points:** `{st.session_state.score}` / {QUESTIONS_PER_ROUND}")
 st.sidebar.markdown(f"**Passing Requirement:** `{PASSING_SCORE}` or more points")
 
-# Reset functions to wipe structural layouts safely
+# Reset function to wipe structural state maps clean
 def full_hard_reset():
     st.session_state.used_question_ids = set()
     st.session_state.current_round = 1
@@ -179,11 +191,11 @@ if st.sidebar.button("🔄 Complete System Hard Reset"):
     trigger_safe_rerun()
 
 # --- MAIN ENGINE HEADER BLOCK ---
-st.title("🧠 Open-TextInput GK Quiz & Deep Metrics Portal")
-st.write(f"Welcome to **Round {st.session_state.current_round}**. Answer 10 open questions. Score 4 or more points to bypass verification gates!")
+st.title("🧠 Advanced Multi-Type GK Quiz & Puzzle Portal")
+st.write(f"Evaluating **Round {st.session_state.current_round}**. Answer the mixed text, image puzzles, and group classification prompts correctly!")
 st.markdown("---")
 
-# Conditional Logic Routing: Evaluating State Status
+# Conditional Logic Routing: Evaluating Intermediate Round Status
 if st.session_state.round_completed:
     final_score = st.session_state.score
     passed = final_score >= PASSING_SCORE
@@ -191,20 +203,20 @@ if st.session_state.round_completed:
     if passed:
         if st.session_state.current_round >= MAX_ROUNDS:
             st.balloons()
-            st.success("🏆 **GRAND CHAMPION! You completed all 5 rounds successfully and mastered the portal!**")
+            st.success("🏆 **GRAND MASTER CHAMPION! You completed all 5 rounds across text, visual, and sorting modules successfully!**")
         else:
-            st.success(f"🎉 **Round {st.session_state.current_round} Passed!** Score: `{final_score} / {QUESTIONS_PER_ROUND}`. Ready for the next stage?")
+            st.success(f"🎉 **Round {st.session_state.current_round} Successfully Cleared!** Score: `{final_score} / {QUESTIONS_PER_ROUND}`.")
     else:
-        st.error(f"❌ **Round Failed.** Score: `{final_score} / {QUESTIONS_PER_ROUND}`. (Needed {PASSING_SCORE}+ points). You must retry this round.")
-        st.info("💡 *Don't worry! New questions have been loaded automatically. No repetitions allowed!*")
+        st.error(f"❌ **Round Failed.** Your Score: `{final_score} / {QUESTIONS_PER_ROUND}`. (Target requirement: {PASSING_SCORE}+ points).")
+        st.info("💡 *Non-repetition clause active: New alternate questions have been drawn for your retry attempt.*")
 
-    # Metrics Display Dashboard Grid
+    # Metrics Layout Row
     kpi1, kpi2 = st.columns(2)
     accuracy = (final_score / QUESTIONS_PER_ROUND) * 100
-    kpi1.metric("Round Success Scale", f"{final_score} / {QUESTIONS_PER_ROUND}")
-    kpi2.metric("Precision Index Value", f"{accuracy:.1f}%")
+    kpi1.metric("Validation Accuracy", f"{accuracy:.1f}%")
+    kpi2.metric("Round Result Flag", "PASSED 👍" if passed else "FAILED 👎")
 
-    # Render Plotly Chart Analysis Tracking Arrays
+    # Historical Evaluation Grid
     if st.session_state.history:
         history_df = pd.DataFrame(st.session_state.history)
         correct_count = len(history_df[history_df["Status Verification"] == "✅ Correct"])
@@ -221,15 +233,15 @@ if st.session_state.round_completed:
         marker_color=['#0d9488', '#ef4444'],
         width=0.35
     ))
-    fig_summary.update_layout(template="plotly_white", height=300, margin=dict(t=20, b=20, l=20, r=20))
+    fig_summary.update_layout(template="plotly_white", height=280, margin=dict(t=20, b=20, l=20, r=20))
     st.plotly_chart(fig_summary, use_container_width=True)
 
     st.table(history_df)
 
-    # Progression button arrays
+    # Action Trigger Routing Arrays
     if passed:
         if st.session_state.current_round < MAX_ROUNDS:
-            if st.button("Proceed to Next Round ➡️"):
+            if st.button("Unlock and Move to Next Round ➡️"):
                 st.session_state.current_round += 1
                 st.session_state.current_index = 0
                 st.session_state.score = 0
@@ -237,38 +249,51 @@ if st.session_state.round_completed:
                 st.session_state.is_answered = False
                 st.session_state.submitted_answer = ""
                 st.session_state.round_completed = False
-                load_round_questions()  # Pulls fresh non-repeated questions
+                load_round_questions()  # Draws next unique batch
                 trigger_safe_rerun()
         else:
-            if st.button("Restart Entire Game Experience 🔄"):
+            if st.button("Reset Entire Application 🔄"):
                 full_hard_reset()
                 trigger_safe_rerun()
     else:
-        if st.button("Retry This Round 🔄"):
+        if st.button("Retry This Specific Round 🔄"):
             st.session_state.current_index = 0
             st.session_state.score = 0
             st.session_state.history = []
             st.session_state.is_answered = False
             st.session_state.submitted_answer = ""
             st.session_state.round_completed = False
-            load_round_questions()  # Discards failed set, pulls fresh unrepeated ones
+            load_round_questions()  # Re-loads round pool with unique fallback questions
             trigger_safe_rerun()
 
 else:
-    # Quiz core loop active gameplay evaluation block
+    # Render active question parameters
     current_question = st.session_state.round_questions[st.session_state.current_index]
     
-    st.markdown(f"### 🚀 Evaluating Subject Sector: `{current_question['category']}`")
+    st.markdown(f"### 🚀 Sector focus: `{current_question['category']}` | Type: `{current_question['type'].upper()} PUZZLE`")
+    
     st.markdown('<div class="quiz-container">', unsafe_allow_html=True)
     st.markdown(f"🧬 **Question {st.session_state.current_index + 1} of 10:** {current_question['question']}")
     st.markdown('</div>', unsafe_allow_html=True)
     
+    # RENDER TYPE CONTENT HOOKS
+    if current_question["type"] == "picture":
+        st.image(current_question["image_url"], width=450, caption="Visual Reference Asset Puzzle Hint")
+        
+    elif current_question["type"] == "group":
+        st.write("🧩 **Group Items To Classify:**")
+        cols = st.columns(len(current_question["items"]))
+        for idx, item in enumerate(current_question["items"]):
+            with cols[idx]:
+                st.markdown(f'<div class="group-box">📦 {item}</div>', unsafe_allow_html=True)
+
+    # Clean standardized Input field box component
     user_typed_input = st.text_input(
-        "Type your answer text below in the blank field box:",
+        "Type your validation answer string key below:",
         value="",
         placeholder="Type response sequence here...",
         disabled=st.session_state.is_answered,
-        key=f"q_text_r{st.session_state.current_round}_{st.session_state.current_index}"
+        key=f"q_field_r{st.session_state.current_round}_{st.session_state.current_index}"
     )
     
     st.markdown("---")
@@ -289,13 +314,13 @@ else:
         target_display_answer = current_question["display_correct"]
         
         if is_right:
-            st.success(f"✨ **Correct! Excellent Precision.** You matched: **{target_display_answer}**.")
+            st.success(f"✨ **Correct! Excellent Analytical Precision.** You correctly targeted: **{target_display_answer}**.")
         else:
-            st.error(f"❌ **Incorrect Match Registered.** You entered: '{final_answer_string}'. Correct answer: **{target_display_answer}**.")
+            st.error(f"❌ **Incorrect Registration.** You entered: '{final_answer_string}'. Target category mapping: **{target_display_answer}**.")
             
         st.markdown(f"""
         <div class="fact-card">
-            <div class="fact-title">💡 Did You Know?</div>
+            <div class="fact-title">💡 Contextual Insight Core Info:</div>
             <p style="margin: 0; color: #0f766e; font-size: 15px;">{current_question['fact']}</p>
         </div>
         """, unsafe_allow_html=True)
@@ -305,7 +330,7 @@ else:
         if st.button(button_label):
             st.session_state.history.append({
                 "Question Index": f"Q-{st.session_state.current_index + 1}",
-                "Subject Focus Category": current_question["category"],
+                "Type Pattern": current_question["type"].upper(),
                 "Your Input Logged": final_answer_string,
                 "Expected Core Value": target_display_answer,
                 "Status Verification": "✅ Correct" if is_right else "❌ Incorrect"
