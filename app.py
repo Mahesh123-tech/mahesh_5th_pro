@@ -106,7 +106,7 @@ MASTER_QUIZ_BANK = [
     
     # TYPE 3 CONTINUED: MORE GROUPS
     {"id": 41, "type": "group", "category": "Automotive Mapping", "items": ["Tesla", "Ford", "Toyota"], "question": "What manufacturing industry grouping classification do Tesla, Ford, and Toyota belong to?", "accepted_answers": ["automotive", "car manufacturers", "automakers", "cars"], "display_correct": "Automotive / Car Manufacturers", "fact": "These entities specialize in mass engineering, assembly, and sales of motor vehicles globally."},
-    {"id": 42, "type": "group", "category": "Food Mapping", "items": ["Cheddar", "Gouda", "Mozzarella"], "question": "What dairy product culinary class group do Cheddar, Gouda, and Mozzarella belong to?", "accepted_answers": ["cheese", "cheeses"], "display_correct": "Cheese", "fact": "These products are made from coagulated milk proteins separated from liquid whey elements."},
+    {"id": 42, "type": "group", "category": "Food Mapping", "items": ["Cheddar", "Gouda", "Mozzarella"], "question": "What dairy product culinary class group do Cheddar, Gouda, and Mozzarella belong to?", "accepted_answers": ["cheese", "cheeses"], "display_correct": "Cheese", "fact": "These products are made from cookies or milk proteins separated from liquid whey elements."},
     {"id": 43, "type": "group", "category": "Currency Mapping", "items": ["Dollar", "Euro", "Yen"], "question": "What legal fiscal tender categorization classification group do the Dollar, Euro, and Yen belong to?", "accepted_answers": ["currency", "currencies", "money", "fiat"], "display_correct": "Currencies / Fiat Money", "fact": "Currencies represent centralized economic units of account recognized as legal tender values by state systems."},
     {"id": 44, "type": "group", "category": "Language Mapping", "items": ["Python", "Java", "C++"], "question": "What technical engineering software group taxonomy do Python, Java, and C++ belong to?", "accepted_answers": ["programming languages", "programming language", "code", "coding languages"], "display_correct": "Programming Languages", "fact": "These semantic syntax standards translate instructions into logical instructions machine hardware execution stacks process."},
     {"id": 45, "type": "group", "category": "Season Mapping", "items": ["Summer", "Autumn", "Winter"], "question": "What recurring annual climate division category cycle do Summer, Autumn, and Winter belong to?", "accepted_answers": ["seasons", "season"], "display_correct": "Seasons", "fact": "Seasons result from the Earth's axial tilt relative to its orbital plain trajectory around the Sun."},
@@ -147,23 +147,18 @@ MAX_ROUNDS = 5
 
 # --- HELPER FUNCTION: GENERATE 10 BALANCED UNIQUE QUESTIONS ---
 def load_round_questions():
-    # Filter out anything that has been globally blacklisted to ensure zero repetitions
     available_pool = [q for q in MASTER_QUIZ_BANK if q["id"] not in st.session_state.used_question_ids]
     
-    # Fallback safety reset layer: if the entire master bank is exhausted, clear the system block
     if len(available_pool) < QUESTIONS_PER_ROUND:
         st.session_state.used_question_ids = set()
         available_pool = MASTER_QUIZ_BANK
         
-    # Pick a random varied mix of 10 questions
     selected = random.sample(available_pool, QUESTIONS_PER_ROUND)
     st.session_state.round_questions = selected
     
-    # Log choices directly into global non-repetition tracking database
     for q in selected:
         st.session_state.used_question_ids.add(q["id"])
 
-# Init round composition if data is uninitialized
 if not st.session_state.round_questions:
     load_round_questions()
 
@@ -177,7 +172,6 @@ st.sidebar.markdown(f"**Progress Track:** Question {min(QUESTIONS_PER_ROUND, st.
 st.sidebar.markdown(f"**Current Points:** `{st.session_state.score}` / {QUESTIONS_PER_ROUND}")
 st.sidebar.markdown(f"**Passing Requirement:** `{PASSING_SCORE}` or more points")
 
-# Reset function to wipe structural state maps clean
 def full_hard_reset():
     st.session_state.used_question_ids = set()
     st.session_state.current_round = 1
@@ -198,7 +192,6 @@ st.title("🧠 Advanced Multi-Type GK Quiz & Puzzle Portal")
 st.write(f"Evaluating **Round {st.session_state.current_round}**. Answer the mixed text, image puzzles, and group classification prompts correctly!")
 st.markdown("---")
 
-# Conditional Logic Routing: Evaluating Intermediate Round Status
 if st.session_state.round_completed:
     final_score = st.session_state.score
     passed = final_score >= PASSING_SCORE
@@ -213,13 +206,11 @@ if st.session_state.round_completed:
         st.error(f"❌ **Round Failed.** Your Score: `{final_score} / {QUESTIONS_PER_ROUND}`. (Target requirement: {PASSING_SCORE}+ points).")
         st.info("💡 *Non-repetition clause active: New alternate questions have been drawn for your retry attempt.*")
 
-    # Metrics Layout Row
     kpi1, kpi2 = st.columns(2)
     accuracy = (final_score / QUESTIONS_PER_ROUND) * 100
     kpi1.metric("Validation Accuracy", f"{accuracy:.1f}%")
     kpi2.metric("Round Result Flag", "PASSED 👍" if passed else "FAILED 👎")
 
-    # Historical Evaluation Grid
     if st.session_state.history:
         history_df = pd.DataFrame(st.session_state.history)
         correct_count = len(history_df[history_df["Status Verification"] == "✅ Correct"])
@@ -241,7 +232,6 @@ if st.session_state.round_completed:
 
     st.table(history_df)
 
-    # Action Trigger Routing Arrays
     if passed:
         if st.session_state.current_round < MAX_ROUNDS:
             if st.button("Unlock and Move to Next Round ➡️"):
@@ -252,7 +242,7 @@ if st.session_state.round_completed:
                 st.session_state.is_answered = False
                 st.session_state.submitted_answer = ""
                 st.session_state.round_completed = False
-                load_round_questions()  # Draws next unique batch
+                load_round_questions()
                 trigger_safe_rerun()
         else:
             if st.button("Reset Entire Application 🔄"):
@@ -266,31 +256,33 @@ if st.session_state.round_completed:
             st.session_state.is_answered = False
             st.session_state.submitted_answer = ""
             st.session_state.round_completed = False
-            load_round_questions()  # Re-loads round pool with unique fallback questions
+            load_round_questions()
             trigger_safe_rerun()
 
 else:
-    # Render active question parameters
     current_question = st.session_state.round_questions[st.session_state.current_index]
     
-    st.markdown(f"### 🚀 Sector focus: `{current_question['category']}` | Type: `{current_question['type'].upper()} PUZZLE`")
+    # SAFE FIX: Using .get() fallback parameter to stop KeyError crashes completely
+    q_type = current_question.get("type", "text").upper()
+    q_category = current_question.get("category", "General Knowledge")
+    
+    st.markdown(f"### 🚀 Sector focus: `{q_category}` | Type: `{q_type} PUZZLE`")
     
     st.markdown('<div class="quiz-container">', unsafe_allow_html=True)
-    st.markdown(f"🧬 **Question {st.session_state.current_index + 1} of 10:** {current_question['question']}")
+    st.markdown(f"🧬 **Question {st.session_state.current_index + 1} of 10:** {current_question.get('question', '')}")
     st.markdown('</div>', unsafe_allow_html=True)
     
-    # RENDER TYPE CONTENT HOOKS
-    if current_question["type"] == "picture":
-        st.image(current_question["image_url"], width=450, caption="Visual Reference Asset Puzzle Hint")
+    if current_question.get("type") == "picture":
+        st.image(current_question.get("image_url", ""), width=450, caption="Visual Reference Asset Puzzle Hint")
         
-    elif current_question["type"] == "group":
+    elif current_question.get("type") == "group":
         st.write("🧩 **Group Items To Classify:**")
-        cols = st.columns(len(current_question["items"]))
-        for idx, item in enumerate(current_question["items"]):
+        group_items = current_question.get("items", [])
+        cols = st.columns(max(1, len(group_items)))
+        for idx, item in enumerate(group_items):
             with cols[idx]:
                 st.markdown(f'<div class="group-box">📦 {item}</div>', unsafe_allow_html=True)
 
-    # Clean standardized Input field box component
     user_typed_input = st.text_input(
         "Type your validation answer string key below:",
         value="",
@@ -313,8 +305,9 @@ else:
     else:
         final_answer_string = st.session_state.submitted_answer
         user_clean = final_answer_string.strip().lower()
-        is_right = user_clean in current_question["accepted_answers"]
-        target_display_answer = current_question["display_correct"]
+        accepted = current_question.get("accepted_answers", [])
+        is_right = user_clean in accepted
+        target_display_answer = current_question.get("display_correct", "")
         
         if is_right:
             st.success(f"✨ **Correct! Excellent Analytical Precision.** You correctly targeted: **{target_display_answer}**.")
@@ -324,7 +317,7 @@ else:
         st.markdown(f"""
         <div class="fact-card">
             <div class="fact-title">💡 Contextual Insight Core Info:</div>
-            <p style="margin: 0; color: #0f766e; font-size: 15px;">{current_question['fact']}</p>
+            <p style="margin: 0; color: #0f766e; font-size: 15px;">{current_question.get('fact', '')}</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -333,7 +326,7 @@ else:
         if st.button(button_label):
             st.session_state.history.append({
                 "Question Index": f"Q-{st.session_state.current_index + 1}",
-                "Type Pattern": current_question["type"].upper(),
+                "Type Pattern": q_type,
                 "Your Input Logged": final_answer_string,
                 "Expected Core Value": target_display_answer,
                 "Status Verification": "✅ Correct" if is_right else "❌ Incorrect"
